@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Expiry Tracker</title>
+    <style>
+        body {
+            background-color: #222222;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        th {
+            background-color: #333333;
+            color: #ffffff;
+        }
+
+        .available {
+            font-weight: bold;
+        }
+
+        .flag {
+            display: inline-block;
+            padding: 4px 8px;
+            margin-right: 4px;
+            border-radius: 4px;
+        }
+
+        .pending-delete {
+            background-color: #e18222;
+            color: #ffffff;
+        }
+
+        .delegated {
+            background-color: #e18222;
+            color: #ffffff;
+        }
+
+        .client-hold {
+            background-color: #ff3399;
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <table id="domainTable">
+        <thead>
+            <tr>
+                <th>Domain</th>
+                <th>Expires</th>
+                <th>Flags</th>
+                <th>Source</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        async function fetchData() {
+            try {
+                const key = window.location.hash.substr(1);
+                const response = await fetch('http://localhost:8080/api/domains?key=' + key);
+                
+                if (response.status === 401) {
+                    document.documentElement.innerHTML = `
+                        <html>
+                        <head>
+                        <title>Unauthorized</title>
+                        <body>
+                        <h1>Unauthorized</h1>
+                        <p>Access denied. Please check if the key is correct.</p>
+                        </body>
+                        </html>
+                    `;
+                } else {
+
+                    const data = await response.json();
+                    const sortedData = Object.entries(data).sort((a, b) => a[1].expires - b[1].expires);
+
+                    const tableBody = document.querySelector('#domainTable tbody');
+                    tableBody.innerHTML = '';
+
+                    sortedData.forEach(([domain, info]) => {
+                        const { status, expires, flags, source } = info;
+
+                        if (flags)
+                            flagBoxes = flags.map(flag => `<span class="flag ${flag.replace(' ', '-')}">${flag}</span>`).join('');
+                        else
+                            flagBoxes = ""
+
+                        console.log(flagBoxes)
+
+                        const row = document.createElement('tr');
+
+                        const domainCell = document.createElement('td');
+                        domainCell.textContent = domain;
+                        row.appendChild(domainCell);
+
+                        const expiresCell = document.createElement('td');
+                        if (status === "taken") {
+                            expiresCell.textContent = new Date(expires * 1000).toLocaleDateString();
+                        }
+                        else {
+                            expiresCell.textContent = "Available";
+                            expiresCell.classList.add('available');
+                        }
+                        row.appendChild(expiresCell);
+
+                        const flagsCell = document.createElement('td');
+                        flagsCell.innerHTML = flagBoxes;
+                        row.appendChild(flagsCell);
+
+                        const sourceCell = document.createElement('td');
+                        sourceCell.textContent = source;
+                        row.appendChild(sourceCell);
+
+                        tableBody.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        fetchData();
+    </script>
+</body>
+
+</html>
