@@ -12,8 +12,6 @@ import (
 
 func parseDomain(client *fasthttp.Client, fullDomain string) (sld string, tld string, domain string, err error) {
 
-	//fmt.Println("Recieved request to parse", fullDomain)
-
 	if !strings.Contains(fullDomain, ".") {
 		return "", "", "", errors.New("invalid domain")
 	}
@@ -31,7 +29,6 @@ func parseDomain(client *fasthttp.Client, fullDomain string) (sld string, tld st
 		if ownedByRegistry {
 			return x[len(x)-2] + "." + x[len(x)-1], x[len(x)-1], x[len(x)-3] + "." + x[len(x)-2] + "." + x[len(x)-1], nil
 		} else {
-			//fmt.Printf("%v is not owned by the registry\n", x[len(x)-2]+"."+x[len(x)-1])
 			return x[len(x)-1], x[len(x)-1], x[len(x)-2] + "." + x[len(x)-1], nil
 		}
 
