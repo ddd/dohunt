@@ -73,7 +73,7 @@
         async function fetchData() {
             try {
                 const key = window.location.hash.substr(1);
-                const response = await fetch('http://localhost:8080/api/domains?key=' + key);
+                const response = await fetch(`${window.location.origin}/api/domains?key=${key}`);
                 
                 if (response.status === 401) {
                     document.documentElement.innerHTML = `
