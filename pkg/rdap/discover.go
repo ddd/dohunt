@@ -10,14 +10,11 @@ import (
 // Returns a map of every TLD which has a RDAP server and the respective server address
 func FetchSrvList(client *fasthttp.Client) (map[string]string, error) {
 
-	// Create a new request object
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 
-	// Set the request URL
 	req.SetRequestURI("https://data.iana.org/rdap/dns.json")
 
-	// Send the request and get the response
 	resp := fasthttp.AcquireResponse()
 	defer fasthttp.ReleaseResponse(resp)
 
@@ -26,7 +23,6 @@ func FetchSrvList(client *fasthttp.Client) (map[string]string, error) {
 		return nil, err
 	}
 
-	// Unmarshal the response JSON
 	var response map[string]any
 	err = json.Unmarshal(resp.Body(), &response)
 	if err != nil {
@@ -50,14 +46,11 @@ func FetchSrvList(client *fasthttp.Client) (map[string]string, error) {
 // Returns list of valid TLDs
 func FetchTLDList(client *fasthttp.Client) (map[string]int, error) {
 
-	// Create a new request object
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 
-	// Set the request URL
 	req.SetRequestURI("https://data.iana.org/TLD/tlds-alpha-by-domain.txt")
 
-	// Send the request and get the response
 	resp := fasthttp.AcquireResponse()
 	defer fasthttp.ReleaseResponse(resp)
 
@@ -66,7 +59,6 @@ func FetchTLDList(client *fasthttp.Client) (map[string]int, error) {
 		return nil, err
 	}
 
-	// Split the data by newlines
 	lines := strings.Split(string(resp.Body()), "\n")
 
 	// Create an empty array to store the TLDs

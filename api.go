@@ -20,21 +20,16 @@ func startAPI(domainData *map[string]domains.Domain, port int) {
 
 		key := c.Query("key")
 
-		// TODO: Switch to DOCHKEY env variable
 		if key != os.Getenv("DOCHKEY") {
 			return c.Status(fiber.StatusUnauthorized).SendString("401 Unauthorized")
 		}
 
-		// Convert the map to JSON
 		jsonData, err := json.Marshal(*domainData)
 		if err != nil {
 			return err
 		}
 
-		// Set the response content type as JSON
 		c.Set("Content-Type", "application/json")
-
-		// Return the JSON data
 		return c.Send(jsonData)
 	})
 

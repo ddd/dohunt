@@ -133,18 +133,10 @@ func IsSLDOwnedByRegistry(client *fasthttp.Client, potentialTLD string) (bool, e
 		return false, err
 	}
 
-	//for _, i := range rootNs {
-	//	fmt.Println(i)
-	//}
-
 	ns, err := QuerySOA(client, potentialTLD)
 	if err != nil {
 		return false, err
 	}
-
-	//for _, i := range ns {
-	//	fmt.Println(i)
-	//}
 
 	for _, x := range ns {
 		for _, y := range rootNs {

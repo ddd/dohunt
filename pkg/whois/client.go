@@ -47,7 +47,6 @@ func Query(server string, domain string, tld string) (domains.Domain, error) {
 
 	}
 
-	//fmt.Println(string(response))
 	domainData, err := parseWhoisResponse(domain, tld, response)
 	if err != nil {
 		return domains.Domain{}, err

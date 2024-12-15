@@ -73,7 +73,6 @@ func manager(client *fasthttp.Client, dnsCh chan<- domains.Domain, domainFile st
 
 func main() {
 
-	// Define command line flags
 	port := flag.Int("p", 8080, "port")
 	threads := flag.Int("t", 1, "thread count")
 	domainFile := flag.String("d", "domains.txt", "file containing list of domains to track expiry of")
