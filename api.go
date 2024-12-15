@@ -14,7 +14,7 @@ func startAPI(domainData *map[string]domains.Domain, port int) {
 	// Pass the engine to the Views
 	app := fiber.New()
 
-	app.Static("/", "/static")
+	app.Static("/", "./static")
 
 	app.Get("/api/domains", func(c *fiber.Ctx) error {
 
