@@ -2,6 +2,7 @@ package dns
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -58,8 +59,14 @@ func QuerySOA(client *fasthttp.Client, query string) ([]string, error) {
 
 	var respData Answer
 	if len(response.Answers) == 0 {
+		if len(response.Authority) == 0 {
+			return nil, errors.New("empty authority list")
+		}
 		respData = response.Authority[0]
 	} else {
+		if len(response.Answers) == 0 {
+			return nil, errors.New("empty answers list")
+		}
 		respData = response.Answers[0]
 	}
 
